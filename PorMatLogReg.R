@@ -20,18 +20,18 @@ student.mat.train <- student.mat[1:350,]
 student.mat.test  <- student.mat[301:395,]
 
 ## set train and test set for portugese class
-student.por.train <- student.por[1:325,]
-student.por.test  <- student.por[326:649,]
+student.por.train <- student.por[1:500,]
+student.por.test  <- student.por[501:649,]
 
 ### first model is without any grades
 
-matModelNoGrades <- glm(Success ~ . , family = binomial(link = "logit"), data =  subset(student.mat.train, select = -c(G1,G2,G3)))
+matModelNoGrades <- glm(Success ~ . , family = binomial(link = "logit"), data =  subset(student.por.train, select = -c(G1,G2,G3)))
 
-fitted.results <- predict(matModelNoGrades,newdata=student.mat.test)
+fitted.results <- predict(matModelNoGrades,newdata=student.por.test)
 fitted.results <- ifelse(fitted.results>0.5,1,0)
 
 #student.mat.test <- cbind(student.mat.test,fitted.results)
-noGradeAcc <- 1-mean(fitted.results != student.mat.test$Success)
+noGradeAcc <- 1-mean(fitted.results != student.por.test$Success)
 
 matModelNoGrades2 <- glm(Success ~ Medu + paid + absences + reason + failures + Dalc, family=binomial, data = subset(student.mat.train, select = -c(G1,G2,G3)))
 
