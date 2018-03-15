@@ -27,10 +27,23 @@ student.por.test  <- student.por[326:649,]
 
 matModelNoGrades <- glm(Success ~ . , family = binomial(link = "logit"), data =  subset(student.mat.train, select = -c(G1,G2,G3)))
 
-matModelNoGrades2 <- glm(Success ~ Medu + paid + absences + reason + failures + Dalc, family=binomial, data = student.mat.train)
+fitted.results <- predict(matModelNoGrades,newdata=student.mat.test)
+fitted.results <- ifelse(fitted.results>0.5,1,0)
+
+#student.mat.test <- cbind(student.mat.test,fitted.results)
+noGradeAcc <- 1-mean(fitted.results != student.mat.test$Success)
+
+matModelNoGrades2 <- glm(Success ~ Medu + paid + absences + reason + failures + Dalc, family=binomial, data = subset(student.mat.train, select = -c(G1,G2,G3)))
+
 
 ### second model is with G1 and qualitative data
 matModelWG1 <- glm(Success ~ . , family = binomial(link = "logit"), data =  subset(student.mat.train, select = -c(G2,G3)))
+
+
+fitted.results2 <- predict(matModelWG1,newdata=student.mat.test)
+fitted.results2 <- ifelse(fitted.results2>0.5,1,0)
+
+G1GradeAcc <- 1-mean(fitted.results2 != student.mat.test$Success)
 
 ### third model is with G1 and G2 and qualitative data
 
